@@ -56,7 +56,7 @@ for i in data:
         scraped_date
     ])
 
-columns = ['ProdId', 'Brand', 'Model', "Conditie", "Pret", "Pret retail", "Spatiu stocare", 'Culoare', "Procesor", "System",
-           "Sim"]
+columns = ['ProdId', 'Brand', 'Model', "Conditie", "Pret", "PretRetail", "SpatiuStocare", 'Culoare', "Procesor", "System",
+           "Sim", "ScrapedDate"]
 df = pd.DataFrame(data_list, columns=columns)
 df.to_csv(f"D:/P/Webscrapers/BD/Flip_{date}.csv", index=False)
