@@ -39,6 +39,7 @@ for i in data:
     processor = i['device']['processor']
     system = i['device']['system']
     sim = i['device']['sim']
+    scraped_date = datetime.now().strftime("%d/%m/%y")
 
     data_list.append([
         prod_id,
@@ -51,11 +52,11 @@ for i in data:
         color,
         processor,
         system,
-        sim
+        sim,
+        scraped_date
     ])
 
 columns = ['ProdId', 'Brand', 'Model', "Conditie", "Pret", "Pret retail", "Spatiu stocare", 'Culoare', "Procesor", "System",
            "Sim"]
 df = pd.DataFrame(data_list, columns=columns)
-df.to_excel(f"D:/P/Webscrapers/BD/Flip_{date}.xlsx", index=False)
 df.to_csv(f"D:/P/Webscrapers/BD/Flip_{date}.csv", index=False)
