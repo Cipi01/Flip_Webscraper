@@ -1,6 +1,8 @@
 import requests
 import pandas as pd
 from datetime import datetime
+import glob
+import os
 
 date = datetime.now().strftime("%d_%m_%Y")
 url = "https://product-cache.flip.ro/"
@@ -27,8 +29,20 @@ response = requests.request("GET", url, data=payload, headers=headers, params=qu
 
 data = response.json()['data']['marketplace']
 data_list = []
+
+# Check last .csv file
+csv_dir = "D:/P/Webscrapers/BD/FLIP"
+list_of_files = glob.glob(f"{csv_dir}/*.csv")
+latest_file = max(list_of_files, key=os.path.getctime)
+prev_df = pd.read_csv(latest_file)
+
+if 'UniqueID' in prev_df.columns:
+    last_row = prev_df.tail(1)
+    highest_id = last_row['UniqueID'].values[0]
+    unique_id = highest_id + 1
+else:
+    unique_id = 1
 for i in data:
-    prod_id = i['model_id']
     cond = i['shape']
     price = i['buy_price']
     retail_price = i['retail_price']
@@ -42,7 +56,7 @@ for i in data:
     scraped_date = datetime.now().strftime("%d/%m/%y")
 
     data_list.append([
-        prod_id,
+        unique_id,
         brand,
         model,
         cond,
@@ -56,7 +70,8 @@ for i in data:
         scraped_date
     ])
 
-columns = ['ProdId', 'Brand', 'Model', "Conditie", "Pret", "PretRetail", "SpatiuStocare", 'Culoare', "Procesor", "System",
+    unique_id += 1
+columns = ['UniqueID', 'Brand', 'Model', "Conditie", "Pret", "PretRetail", "SpatiuStocare", 'Culoare', "Procesor", "System",
            "Sim", "ScrapedDate"]
 df = pd.DataFrame(data_list, columns=columns)
-df.to_csv(f"D:/P/Webscrapers/BD/Flip_{date}.csv", index=False)
+df.to_csv(f"D:/P/Webscrapers/BD/FLIP/Flip_{date}.csv", index=False)
